@@ -1,13 +1,13 @@
 // app/api/articles/route.ts
 import { NextResponse } from 'next/server';
-import { getAllArticles } from '@/lib/articles';
+import { getAllLocalArticles } from '@/lib/articles';
 import { getAllRssArticles } from '@/lib/rss';
 import { rssSources } from '@/data/rss-sources';
 import { siteConfig } from '@/config/site';
 
 export async function GET() {
   try {
-    let articles = getAllArticles();
+    let articles = getAllLocalArticles();
 
     // 如果启用了RSS集成，则获取RSS文章
     if (siteConfig.features.rssIntegration) {
