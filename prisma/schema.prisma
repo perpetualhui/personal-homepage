@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Article {
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  description   String?
+  content       String    @db.Text
+  cover         String?
+  category      String    @default("未分类")
+  tags          String[]  @default([])
+  featured      Boolean   @default(false)
+  status        String    @default("published")
+  readingTime   Int       @default(1)
+  author        String    @default("灰灰")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // 新增字段 - 媒体关联
+  coverMediaId  String?  @unique
+  coverMedia    Media?   @relation("ArticleCover", fields: [coverMediaId], references: [id])
+  medias        Media[]
+
+  // 新增字段 - 草稿支持（Phase 4 自动保存系统）
+  lastSavedAt   DateTime?
+  draftContent  String?   @db.Text
+  draftVersion  Int       @default(0)
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  icon        String   @default("📁")
+  tags        String[] @default([])
+  github      String?
+  demo        String?
+  docs        String?
+  featured    Boolean  @default(false)
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  name      String
+  category  String   @default("技术")
+  level     Int      @default(50)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Profile {
+  id        String   @id @default(cuid())
+  name      String   @default("灰灰")
+  tagline   String   @default("AI爱好者 / Vibe Coding学习者")
+  avatar    String   @default("/avatar.jpg")
+  features  String[] @default([])
+  storyTitle String  @default("关于我的故事")
+  storyContent String[] @default([])
+  github    String?
+  twitter   String?
+  email     String?
+  status    String   @default("开放合作")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([id])
+}
+
+model Tool {
+  id          String   @id @default(cuid())
+  name        String
+  icon        String
+  description String   @db.Text
+  tags        String[] @default([])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  content   String   @db.Text
+  type      String   @default("contact")
+  read      Boolean  @default(false)
+  replied   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Media {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  width        Int?     // 图片宽度
+  height       Int?     // 图片高度
+  url          String   @unique  // Vercel Blob URL
+  blobUrl      String   // Blob 存储路径
+  category     String   @default("image")  // image, video, document, other
+  alt          String?  // 图片描述
+  folder       String   @default("root")  // 文件夹组织
+  optimized    Boolean  @default(false)  // 是否已优化
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // 关联文章（可选）
+  articleId       String?
+  article         Article?  @relation(fields: [articleId], references: [id])
+
+  // 封面图关联（可选）
+  coverArticleId  String?  @unique
+  coverArticle    Article?  @relation("ArticleCover")
+
+  @@index([category])
+  @@index([folder])
+  @@index([createdAt])
+}

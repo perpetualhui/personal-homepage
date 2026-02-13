@@ -4,11 +4,23 @@
 
 ## ✨ 特性
 
+### 核心功能
 - 🎨 **苹果官网设计风格** - 毛玻璃导航栏、流畅动画、精致排版
 - 📝 **完整文章系统** - Markdown写作、Frontmatter元数据、自动生成
 - 🛠️ **项目展示侧栏** - 展示你的开源项目作品
 - 📡 **多平台内容聚合** - 支持RSS集成（微信公众号、掘金、知乎等）
 - 📱 **完全响应式** - 完美适配手机、平板、电脑
+
+### v2.5 新增功能 ⭐
+- 🔐 **GitHub OAuth 认证** - 使用 GitHub 账号登录管理后台
+- 📁 **文件管理系统** - 基于 Vercel Blob 的文件存储
+- 🎯 **管理后台** - 完整的文章和媒体管理界面
+- ✍️ **富文本编辑器** - Novel 编辑器，支持 Notion 风格写作
+- 🗄️ **数据库集成** - Prisma + PostgreSQL 数据持久化
+- 📊 **媒体库** - 上传、管理、删除图片和文档
+- 🔍 **文章预览** - 实时预览文章效果
+
+### 技术特性
 - ⚡ **Next.js 15** - 使用最新的App Router和React 19
 - 🔒 **TypeScript** - 类型安全，代码更可靠
 - 🚀 **一键部署** - 完美支持 Vercel 部署
@@ -186,6 +198,51 @@ npm run dev
 ```
 
 **详细文档：** 查看 [WRITING.md](./WRITING.md) 了解完整的文章创作指南。
+
+---
+
+## 💾 Vercel Blob 存储配置
+
+项目已集成 Vercel Blob 用于文件存储（图片、文档等）。
+
+### 环境变量配置
+
+在 `.env` 或 `.env.local` 中添加：
+
+```bash
+BLOB_READ_WRITE_TOKEN="vercel_blob_rw_xxxx"
+```
+
+### 使用方式
+
+#### API 上传
+
+```typescript
+import { put } from '@vercel/blob'
+
+// 上传文件
+const blob = await put(filename, fileBuffer, {
+  access: 'public',
+})
+```
+
+#### 测试配置
+
+运行测试脚本验证配置：
+
+```bash
+node test-blob.js
+```
+
+### 功能特性
+
+- ✅ 图片上传（JPEG, PNG, WebP, GIF, SVG）
+- ✅ 文档上传（PDF, Word）
+- ✅ 文件大小限制：10MB
+- ✅ 自动生成公开 URL
+- ✅ 数据库元数据记录
+
+详细测试报告：查看 [BLOB_TEST_REPORT.md](./BLOB_TEST_REPORT.md)
 
 ---
 
@@ -435,12 +492,27 @@ npm run lint
 
 ## 📦 技术栈
 
+### 前端
 - **框架**: Next.js 15 (App Router)
 - **语言**: TypeScript
+- **UI**: React 19
 - **样式**: Tailwind CSS + 自定义CSS
-- **React**: React 19
+- **编辑器**: Novel (Notion 风格编辑器)
+
+### 后端
+- **数据库**: PostgreSQL (Supabase)
+- **ORM**: Prisma 6
+- **认证**: NextAuth.js v4 (GitHub OAuth)
+- **API**: Next.js Route Handlers
+
+### 存储
+- **文件存储**: Vercel Blob (图片、文档)
+- **数据库**: Supabase PostgreSQL
+
+### 内容处理
 - **Markdown**: gray-matter + remark + rehype
 - **RSS**: rss-parser
+- **代码高亮**: remark-prism
 
 ---
 
