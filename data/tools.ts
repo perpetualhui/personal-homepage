@@ -24,8 +24,8 @@ export const tools: Tool[] = [
   {
     id: '3',
     icon: '📝',
-    name: 'Claude',
-    description: 'Anthropic开发的AI助手，擅长分析、写作和复杂推理任务',
+    name: 'AI助手',
+    description: 'AI编程助手，擅长分析、写作和复杂推理任务',
     tags: ['分析', '写作', '推理']
   },
   {
